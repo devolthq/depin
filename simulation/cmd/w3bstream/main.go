@@ -58,9 +58,6 @@ func main() {
 			Scheme:   "mqtt",
 			Hostname: os.Getenv("W3BSTREAM_MQTT_HOST"),
 			Port:     uint16(port),
-			// if have username and password
-			//Username: "",
-			//Password: types.Password(""),
 		},
 		Retry:     *retry.Default,
 		Timeout:   types.Duration(time.Second * time.Duration(10)),
@@ -102,7 +99,6 @@ func main() {
 						EventId: uuid.NewString(),
 						PubId:   uuid.NewString(),
 					},
-					// Payload: []byte("10"),
 					Payload: []byte(fmt.Sprintf("%v", stationPayload)),
 				}
 				jsonBytesPayload, err := proto.Marshal(payload)

@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"math/big"
 	"net/http"
+	"strings"
+
 	"github.com/machinefi/w3bstream-wasm-golang-sdk/api"
 	"github.com/machinefi/w3bstream-wasm-golang-sdk/common"
 	"github.com/machinefi/w3bstream-wasm-golang-sdk/log"
@@ -15,13 +18,16 @@ func main() {}
 
 //export start
 func _start(rid uint32) int32 {
-	req, err := http.NewRequest("GET", "/system/hello", nil)
+	value := big.NewInt(0)
+	valueStr := value.String()
+	data := fmt.Sprintf(`{"chainName": "mumbai","operatorName": "default","to": "0xdebC1C3aCe0A41c1FB348D1ced30a61BC7A17eb6","value": "%s","data": "40c10f19000000000000000000000000%s0000000000000000000000000000000000000000000000000de0b6b3a7640000"}`, valueStr, "355448B497c04CFbF7A239aBFc1261F45E7050c9")
+
+	req, err := http.NewRequest("POST", "/system/send_tx", strings.NewReader(data))
 	if err != nil {
 		log.Log(err.Error())
 		return -1
 	}
 	req.Header.Set("eventType", "result")
-	req.Header.Set("name", "w3bstream")
 
 	resp, err := api.Call(req)
 	if err != nil {
