@@ -74,9 +74,8 @@ func main() {
 					log.Println("Error converting to JSON:", err)
 				}
 
-				token := client.Publish("stations", 1, false, string(jsonBytesPayload))
-
-				log.Printf("Published: %s, on topic: %s", string(jsonBytesPayload), "stations")
+				token := client.Publish(os.Getenv("BROKER_TOPIC"), 1, false, string(jsonBytesPayload))
+				log.Printf("Published: %s, on topic: %s", string(jsonBytesPayload), os.Getenv("BROKER_TOPIC"))
 				token.Wait()
 				time.Sleep(120 * time.Second)
 			}
