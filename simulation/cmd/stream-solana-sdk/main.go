@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	ckafka "github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/devolthq/depin/simulation/internal/domain/entity"
-	"github.com/devolthq/depin/simulation/internal/infra/blockchain"
+	"github.com/devolthq/depin/simulation/pkg/blockchain"
 	"github.com/devolthq/depin/simulation/internal/infra/kafka"
 	"github.com/gagliardetto/solana-go"
 	"github.com/near/borsh-go"
