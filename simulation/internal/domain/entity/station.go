@@ -10,10 +10,6 @@ type StationRepository interface {
 	FindAllStations() ([]*Station, error)
 }
 
-type StationLogRepository interface {
-	AddInput(data *StationLog) error
-}
-
 type Station struct {
 	ID        string                 `json:"_id"`
 	Latitude  float64                `json:"latitude"`
@@ -21,31 +17,20 @@ type Station struct {
 	Params    map[string]interface{} `json:"params"`
 }
 
-type StationLog struct {
-	Sensor_ID string                 `json:"sensor_id"`
-	Data      map[string]interface{} `json:"data"`
-	Timestamp time.Time              `json:"timestamp"`
-}
-
 type StationPayload struct {
-	Station_ID string    `json:"station_id"`
-	Capacity   float64   `json:"capacity"`
-	Percent    float64   `json:"percent"`
-	Timestamp  time.Time `json:"timestamp"`
-	Latitude   float64   `json:"latitude"`
-	Longitude  float64   `json:"longitude"`
+	ID           string  `json:"id"`
+	MaxCapacity  float64 `json:"max_capacity"`
+	BatteryLevel float64 `json:"battery_level"`
+	Latitude     float64 `json:"latitude"`
+	Longitude    float64 `json:"longitude"`
 }
 
 func Entropy(min float64, max float64) float64 {
 	rand.NewSource(time.Now().UnixNano())
-	return math.Round(rand.Float64()*(max-min) + min)
+	return math.Round(float64(rand.Float64()*(max-min) + min))
 }
 
-func NewStationLog(id string, data map[string]interface{}, timestamp time.Time) *StationLog {
-	return &StationLog{Sensor_ID: id, Data: data, Timestamp: timestamp}
-}
-
-func NewStationPayload(id string, params map[string]interface{}, timestamp time.Time, latitude float64, longitude float64) (*StationPayload, error) {
+func NewStationPayload(id string, params map[string]interface{}, latitude float64, longitude float64) (*StationPayload, error) {
 	min, ok := params["min"].(float64)
 	if !ok {
 		panic("min value not found or not a float64")
@@ -59,11 +44,10 @@ func NewStationPayload(id string, params map[string]interface{}, timestamp time.
 	percent := (value - min) / (max - min) * 100
 
 	return &StationPayload{
-		Station_ID: id,
-		Capacity:   max,
-		Percent:    percent,
-		Timestamp:  timestamp,
-		Latitude:   latitude,
-		Longitude:  longitude,
+		ID:           id,
+		MaxCapacity:  max,
+		BatteryLevel: percent,
+		Latitude:     latitude,
+		Longitude:    longitude,
 	}, nil
 }

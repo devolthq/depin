@@ -61,7 +61,6 @@ func main() {
 				payload, err := entity.NewStationPayload(
 					station.ID,
 					station.Params,
-					time.Now(),
 					station.Latitude,
 					station.Longitude,
 				)

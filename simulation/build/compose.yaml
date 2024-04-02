@@ -8,24 +8,35 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  w3bstream:
-    container_name: simulation-w3bstream
-    hostname: simulation-w3bstream
+  pub-w3bstream:
+    container_name: pub-w3bstream
+    hostname: pub-w3bstream
     restart: always
     env_file:
       - ../config/.env
     build:
       context: ..
-      dockerfile: build/Dockerfile.w3bstream
-  solana-sdk:
-    container_name: simulation-solana-sdk
-    hostname: simulation-solana-sdk
+      dockerfile: build/Dockerfile.pub-w3bstream
+  pub-solana-sdk:
+    container_name: pub-solana-sdk
+    hostname: pub-solana-sdk
     restart: always
     env_file:
       - ../config/.env
     build:
       context: ..
-      dockerfile: build/Dockerfile.solana-sdk
+      dockerfile: build/Dockerfile.pub-solana-sdk
+  stream-solana-sdk:
+    container_name: stream-solana-sdk
+    hostname: stream-solana-sdk
+    depends_on:
+      - pub-solana-sdk
+    restart: always
+    env_file:
+      - ../config/.env
+    build:
+      context: ..
+      dockerfile: build/Dockerfile.stream-solana-sdk
   mockup:
     container_name: mockup
     hostname: mockup

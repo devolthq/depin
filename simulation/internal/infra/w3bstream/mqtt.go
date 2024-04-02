@@ -9,7 +9,7 @@ import (
 )
 
 type W3bMqttClient struct {
-	client *MQTT.Client
+	Client *MQTT.Client
 }
 
 func NewW3bMqttClient(id string, broker *MQTT.Broker) (*W3bMqttClient, error) {
@@ -18,7 +18,7 @@ func NewW3bMqttClient(id string, broker *MQTT.Broker) (*W3bMqttClient, error) {
 		return nil, err
 	}
 	return &W3bMqttClient{
-		client: client,
+		Client: client,
 	}, nil
 }
 
@@ -33,5 +33,5 @@ func (c *W3bMqttClient) Publish(topic string, payload []byte) error {
 			return err
 	}
 	log.Printf("Publishing message %s to topic %s", string(jsonPayload), topic)
-	return c.client.WithTopic(topic).Publish(payload)
+	return c.Client.WithTopic(topic).Publish(payload)
 }

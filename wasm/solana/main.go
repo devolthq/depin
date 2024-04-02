@@ -17,7 +17,7 @@ func main() {}
 
 //export start
 func _start(rid uint32) int32 {
-	data := `{"chainName": "solana-devnet","operatorName": "solana-key","data": "[{\"ProgramID\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"Accounts\":[{\"PubKey\":[91,83,29,193,46,31,234,109,208,211,168,16,189,248,144,184,82,206,5,207,47,237,60,0,252,70,215,201,95,8,82,113],\"IsSigner\":true,\"IsWritable\":true},{\"PubKey\":[91,83,29,193,46,31,234,109,208,211,168,16,189,248,144,184,82,206,5,207,47,237,60,0,252,70,215,201,95,8,82,113],\"IsSigner\":false,\"IsWritable\":true}],\"Data\":\"AgAAAAEAAAAAAAAA\"}]"}`
+	data := `{"chainName": "solana-devnet","operatorName": "solana-key","data": "[{\"ProgramID\":[104, 59, 220, 142, 159, 114, 56, 72, 140, 200, 146, 110, 144, 143, 204, 231, 91, 229, 254, 168, 234, 135,6, 21,155, 27, 101, 118, 176, 230, 176, 189],\"Accounts\":[{\"PubKey\":[163, 5, 193, 216, 243, 33, 223, 130, 145, 9, 117, 106, 254, 86, 171, 115, 255, 3, 202, 13, 71, 103, 142, 162, 238, 169, 164, 211, 45, 242, 230, 132],\"IsSigner\":true,\"IsWritable\":true},{\"PubKey\":[163, 5, 193, 216, 243, 33, 223, 130, 145, 9, 117, 106, 254, 86, 171, 115, 255, 3, 202, 13, 71, 103, 142, 162, 238, 169, 164, 211, 45, 242, 230, 132],\"IsSigner\":true,\"IsWritable\":true}],\"Data\":\"AgAAAAEAAAAAAAAA\"}]"}`
 
 	req, err := http.NewRequest("POST", "/system/send_tx", strings.NewReader(data))
 	if err != nil {
