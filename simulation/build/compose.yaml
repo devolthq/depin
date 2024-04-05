@@ -29,8 +29,6 @@ services:
   stream-solana-sdk:
     container_name: stream-solana-sdk
     hostname: stream-solana-sdk
-    depends_on:
-      - pub-solana-sdk
     restart: always
     env_file:
       - ../config/.env

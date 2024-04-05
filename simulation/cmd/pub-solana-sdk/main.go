@@ -47,12 +47,7 @@ func main() {
 		log.Printf("Starting station: %v", station)
 		go func(station usecase.FindAllStationsOutputDTO) {
 			defer wg.Done()
-			opts := MQTT.NewClientOptions().AddBroker(
-				fmt.Sprintf("ssl://%s:%s",
-					os.Getenv("BROKER_TLS_URL"),
-					os.Getenv("BROKER_PORT"))).SetUsername(
-				os.Getenv("BROKER_USERNAME")).SetPassword(
-				os.Getenv("BROKER_PASSWORD")).SetClientID(station.ID)
+			opts := MQTT.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s:%s", os.Getenv("BROKER_HOST"), os.Getenv("BROKER_PORT"))).SetClientID(station.ID)
 			client := MQTT.NewClient(opts)
 			if session := client.Connect(); session.Wait() && session.Error() != nil {
 				log.Fatalf("Failed to connect to MQTT broker: %v", session.Error())

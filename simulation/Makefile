@@ -2,6 +2,12 @@
 START_LOG = @echo "======================================================= START OF LOG ========================================================="
 END_LOG = @echo "======================================================== END OF LOG =========================================================="
 
+.PHONY: infra
+infra:
+	$(START_LOG)
+	@docker compose -f ./deployments/compose.yaml up --build
+	$(END_LOG)
+
 .PHONY: run
 run:
 	$(START_LOG)
@@ -9,6 +15,15 @@ run:
 		-f ./build/compose.yaml \
 		--env-file ./config/.env \
 		up pub-solana-sdk stream-solana-sdk --build
+	$(END_LOG)
+
+.PHONY: stream
+stream:
+	$(START_LOG)
+	@docker compose \
+		-f ./build/compose.yaml \
+		--env-file ./config/.env \
+		up stream-solana-sdk --build
 	$(END_LOG)
 
 .PHONY: run-w3bstream
@@ -28,8 +43,8 @@ mockup:
 	$(END_LOG)
 
 .PHONY: env
-env: ./config/.env.develop.tmpl
+env:
 	$(START_LOG)
 	touch ./config/solana.json
-	cp ./config/.env.develop.tmpl ./config/.env
+	cp ./config/.env.tmpl ./config/.env
 	$(END_LOG)

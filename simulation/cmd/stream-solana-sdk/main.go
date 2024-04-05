@@ -24,11 +24,7 @@ type Borsh struct {
 func main() {
 	msgChan := make(chan *ckafka.Message)
 	configMap := &ckafka.ConfigMap{
-		"bootstrap.servers":  os.Getenv("CONFLUENT_BOOTSTRAP_SERVER_SASL"),
-		"sasl.mechanisms":    "PLAIN",
-		"security.protocol":  "SASL_SSL",
-		"sasl.username":      os.Getenv("CONFLUENT_API_KEY"),
-		"sasl.password":      os.Getenv("CONFLUENT_API_SECRET"),
+		"bootstrap.servers":  os.Getenv("CONFLUENT_BOOTSTRAP_SERVER"),
 		"session.timeout.ms": 6000,
 		"group.id":           "devolt",
 		"auto.offset.reset":  "latest",
@@ -41,7 +37,7 @@ func main() {
 		}
 	}()
 
-	client := blockchain.NewSolanaClient("./config/solana.json")
+	client := blockchain.NewSolanaClient("./config/solana/solana.json")
 	programId := solana.MustPublicKeyFromBase58("AQnX4CcPXJW281LLyTeccrMyaNxwfgw7xGjTMRPC8YtW")
 
 	for msg := range msgChan {
