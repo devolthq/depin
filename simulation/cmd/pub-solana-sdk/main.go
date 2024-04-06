@@ -18,11 +18,10 @@ import (
 
 func main() {
 	options := options.Client().ApplyURI(
-		fmt.Sprintf("mongodb+srv://%s:%s@%s/?retryWrites=true&w=majority&appName=%s",
-			os.Getenv("MONGODB_ATLAS_USERNAME"),
-			os.Getenv("MONGODB_ATLAS_PASSWORD"),
-			os.Getenv("MONGODB_ATLAS_CLUSTER_HOSTNAME"),
-			os.Getenv("MONGODB_ATLAS_APP_NAME")))
+		fmt.Sprintf("mongodb://%s:%s@%s/?retryWrites=true&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-1&ssl=false",
+			os.Getenv("MONGODB_USERNAME"),
+			os.Getenv("MONGODB_PASSWORD"),
+			os.Getenv("MONGODB_CLUSTER_HOSTNAME")))
 	client, err := mongo.Connect(context.TODO(), options)
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)

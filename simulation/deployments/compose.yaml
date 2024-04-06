@@ -53,3 +53,23 @@ services:
       - 8080:8080
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping")' | mongo mongo:27017/test --quiet
+      interval: 2s
+      timeout: 2s
+      retries: 20
+    restart: always
+    volumes:
+      - ../tools/mockup_mongodb.js:/docker-entrypoint-initdb.d/mockup_mongodb.js:ro
+      - mongodb-data:/data/db
+volumes:
+  mongodb-data:
