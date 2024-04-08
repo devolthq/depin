@@ -12,7 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@solana/web3.js": "^1.91.4",
     "@types/dotenv": "^8.2.0",
+    "bs58": "^5.0.0",
     "dotenv": "^16.4.5",
     "kafkajs": "^2.2.4",
     "ts-node": "^10.9.2"
@@ -20,5 +23,6 @@
   "devDependencies": {
     "@types/node": "^20.12.5",
     "typescript": "^4.3.5"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

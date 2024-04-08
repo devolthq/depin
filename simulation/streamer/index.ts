@@ -1,4 +1,5 @@
-import { type EachMessagePayload, Kafka, Consumer} from 'kafkajs';
+import { type EachMessagePayload, Kafka, KafkaConfig, Consumer } from 'kafkajs';
+import { devoltClient } from './client';
 
 const kafka = new Kafka({
   // clientId: 'sample-consumer',
@@ -8,19 +9,24 @@ const kafka = new Kafka({
 const consumer: Consumer = kafka.consumer({ groupId: 'devolt', sessionTimeout: 6000});
 
 const handleMessage = async ({ topic, partition, message }: EachMessagePayload): Promise<void> => {
-  if (message.value) {
-    console.log(`Received message from topic '${topic}': ${message.value.toString()}`);
-
+    console.log(`Received message from topic '${topic}': ${message.value?.toString()}`);
     if (topic === 'stations') {
-      console.log('Handling batteryReport log:', message.value.toString());
+        console.log('Handling message notification:', message.value?.toString());
+
+        const batteryReport = JSON.parse(message.value!.toString());
+        console.log("Battery Report: ", batteryReport)
+        
+        let sig = await devoltClient.batteryReport(batteryReport);
+        console.log("Transaction Signature: ", sig)
+
+        console.log('Message handled successfully.\nStation after transaction: ');
+        await devoltClient.getStation(batteryReport.id);
     } else {
-      console.log('Unknown topic:', topic);
+        // throw new Error("Topic doesn't exist.")
+        console.error("Topic doesn't exist.")
     }
 
     await consumer.commitOffsets([{ topic, partition, offset: message.offset }]);
-  } else {
-    console.log('Received message with null value');
-  }
 };
 
 const runConsumer = async (): Promise<void> => {

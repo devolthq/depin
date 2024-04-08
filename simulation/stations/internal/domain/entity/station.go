@@ -19,8 +19,8 @@ type Station struct {
 
 type StationPayload struct {
 	ID           string  `json:"id"`
-	MaxCapacity  float64 `json:"max_capacity"`
-	BatteryLevel float64 `json:"battery_level"`
+	MaxCapacity  float64 `json:"maxCapacity"`
+	BatteryLevel float64 `json:"batteryLevel"`
 	Latitude     float64 `json:"latitude"`
 	Longitude    float64 `json:"longitude"`
 }
