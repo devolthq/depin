@@ -19,10 +19,5 @@
     "ts-mocha": "^10.0.0",
     "typescript": "^4.3.5"
   },
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
-  "dependencies": {
-    "@coral-xyz/anchor": "^0.29.0",
-    "bs58": "^5.0.0",
-    "kafkajs": "^2.2.4"
-  }
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
