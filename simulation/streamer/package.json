@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",
+    "@solana/web3.js": "1.91.4",
     "@types/dotenv": "^8.2.0",
     "bs58": "^5.0.0",
     "dotenv": "^16.4.5",
