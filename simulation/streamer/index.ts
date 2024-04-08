@@ -1,7 +1,12 @@
 import { Connection } from '@solana/web3.js';
 import { type EachMessagePayload, Kafka, KafkaConfig, Consumer} from 'kafkajs';
-import { Wallet } from '@coral-xyz/anchor';
+import { AnchorProvider, Program, Wallet, web3 } from '@coral-xyz/anchor'
 import bs58 from 'bs58'
+import { getStationAddressSync } from './sdk/dist/utils/helpers';
+import { convertSecretKeyToKeypair } from './sdk/dist';
+import { DEVOLT_PROGRAM_ID } from './sdk/dist/constants/program';
+import { Devolt, IDL } from './sdk/dist/types/devolt';
+
 
 const kafka = new Kafka({
   // clientId: 'sample-consumer',
@@ -9,6 +14,72 @@ const kafka = new Kafka({
 });
 
 const consumer: Consumer = kafka.consumer({ groupId: 'devolt' });
+
+export default class DevoltClient {
+  connection: Connection
+  wallet: Wallet
+  provider: AnchorProvider
+  program: Program<Devolt>
+
+  constructor(connection: Connection, wallet: Wallet) {
+      this.connection = connection
+      this.wallet = wallet
+      this.provider = new AnchorProvider(
+          this.connection,
+          this.wallet,
+          AnchorProvider.defaultOptions()
+      )
+      this.program = new Program<Devolt>(IDL, DEVOLT_PROGRAM_ID, this.provider)
+      
+      console.log("Program ID: ", this.program.programId)
+  }
+
+  async batteryReport({
+      id,
+      latitude,
+      longitude,
+      maxCapacity,
+      batteryLevel
+  }: {
+      id: string
+      latitude: number
+      longitude: number
+      maxCapacity: number
+      batteryLevel: number
+
+  }) {
+      const encodedId = id // '3'
+      const StationPDA = getStationAddressSync(this.program.programId, encodedId)
+      // console.log("Station PDA: ", StationPDA)
+
+      const tx = await this.program.methods
+          .batteryReport({
+              id,
+              latitude,
+              longitude,
+              maxCapacity,
+              batteryLevel
+          })
+          .accounts({ signer: this.wallet.publicKey, station: StationPDA })
+          .rpc()
+
+      console.log("\nTransaction data: ", tx)
+
+      // const d = await this.program.account.station.fetch(StationPDA)
+  }
+
+  
+
+  async getStation(id: string) {
+      const encodedId = id // '3'
+      const StationPDA = getStationAddressSync(this.program.programId, encodedId)
+
+      const station = await this.program.account.station.fetch(StationPDA)
+
+      console.log("\nStation: ", station)
+  }
+}
+
 
 const secretArray: number[] = [
     59, 82, 131, 25, 97, 163, 16, 56, 89, 160, 64, 28, 241, 28, 188, 186, 21, 131,
