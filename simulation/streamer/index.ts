@@ -1,9 +1,12 @@
 import { type EachMessagePayload, Kafka, Consumer } from "kafkajs";
 import { devoltClient } from "./client";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 const kafka = new Kafka({
   clientId: "devolt-consumer",
-  brokers: ["host.docker.internal:9094"],
+  brokers: [process.env.CONFLUENT_BOOTSTRAP_SERVER],
 });
 
 const consumer: Consumer = kafka.consumer({
@@ -18,7 +21,7 @@ const handleMessage = async ({
   heartbeat,
   message,
 }: EachMessagePayload): Promise<void> => {
-  if (topic === "stations") {
+  if (topic === process.env.CONFLUENT_KAFKA_TOPIC_NAME) {
     const batteryReport = JSON.parse(message.value!.toString());
     let sig = await devoltClient.batteryReport(batteryReport);
     console.log(`Battery report of station ${batteryReport.id} received with batteryLevel ${batteryReport.batteryLevel}, latitude ${batteryReport.latitude}, longitude ${batteryReport.longitude}, maxCapacity ${batteryReport.maxCapacity}`);

@@ -11,7 +11,7 @@ env:
 .PHONY: up
 up:
 	$(START_LOG)
-	@docker compose -f ./compose.yaml up streamer --build
+	@docker compose -f ./compose.yaml --env-file ./.env up streamer --build
 	$(END_LOG)
 
 .PHONY: down

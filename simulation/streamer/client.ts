@@ -1,12 +1,15 @@
 import { Connection, sendAndConfirmTransaction } from "@solana/web3.js";
-import { AnchorProvider, Program, Wallet } from "@coral-xyz/anchor";
+import { AnchorProvider, Program, Wallet, web3 } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor";
 import bs58 from "bs58";
+import dotenv from "dotenv";
 import { PublicKey } from "@solana/web3.js";
 import { Keypair } from "@solana/web3.js";
 import { Devolt, IDL } from "./types/devolt";
 
 export const DEVOLT_PROGRAM_ID = "A8Tx8hQwFY2mDuRG89dxiLBac1V3rJtkpPKvktc7uMkw";
+
+dotenv.config({ path: __dirname + "/.env" });
 
 export function getStationAddressSync(
   programId: PublicKey,
@@ -40,6 +43,34 @@ export default class DevoltClient {
       AnchorProvider.defaultOptions()
     );
     this.program = new Program<Devolt>(IDL, DEVOLT_PROGRAM_ID, this.provider);
+  }
+
+  async getAllStations() {
+    console.log("\n\n\nFetching all stations...");
+    const stations = await this.program.account.station.all();
+    console.log("\nStations: ", stations);
+    return stations;
+  }
+
+  async sendSolToStationPDA(id: string, amount: number) {
+    console.log(`Sending ${amount} SOL to station ${id}...`);
+
+    const encodedId = id;
+    const StationPDA = getStationAddressSync(this.program.programId, encodedId);
+
+    const txInstruction = web3.SystemProgram.transfer({
+      fromPubkey: this.wallet.publicKey,
+      toPubkey: StationPDA,
+      lamports: amount,
+    });
+
+    const tx = new web3.Transaction().add(txInstruction);
+
+    await sendAndConfirmTransaction(this.connection, tx, [this.wallet.payer]);
+    console.log(`Successfully sent ${amount} LAMPORTS to station ${id}.`);
+    console.log(
+      `Station PDA Balance: ${await this.connection.getBalance(StationPDA)}`
+    );
   }
 
   async batteryReport({
@@ -84,12 +115,8 @@ export default class DevoltClient {
   }
 }
 
-const secretArray: number[] = [
-  59, 82, 131, 25, 97, 163, 16, 56, 89, 160, 64, 28, 241, 28, 188, 186, 21, 131,
-  230, 113, 252, 100, 208, 60, 137, 240, 43, 85, 254, 217, 68, 149, 163, 5, 193,
-  216, 243, 33, 223, 130, 145, 9, 117, 106, 254, 86, 171, 115, 255, 3, 202, 13,
-  71, 103, 142, 162, 238, 169, 164, 211, 45, 242, 230, 132,
-];
+const secretArrayStr = process.env.SOLANA_KEY;
+const secretArray = JSON.parse(secretArrayStr!);
 const secret: Uint8Array = new Uint8Array(secretArray);
 const secretHex: string = Array.from(secret)
   .map((b) => b.toString(16).padStart(2, "0"))

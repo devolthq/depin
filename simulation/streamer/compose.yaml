@@ -2,5 +2,7 @@ services:
   streamer:
     build:
       context: .
-    environment:
-      NODE_ENV: production
+    # environment:
+    #   NODE_ENV: production
+    env_file:
+      - .env
