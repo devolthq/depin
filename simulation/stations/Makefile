@@ -58,6 +58,6 @@ mockup:
 .PHONY: env
 env:
 	$(START_LOG)
-	touch ./config/id.json
+	touch ./config/solana/id.json
 	cp ./config/.env.tmpl ./config/.env
 	$(END_LOG)
