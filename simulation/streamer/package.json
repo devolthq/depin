@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
     "@types/dotenv": "^8.2.0",
+    "bs58": "^5.0.0",
     "dotenv": "^16.4.5",
     "kafkajs": "^2.2.4",
     "ts-node": "^10.9.2"
