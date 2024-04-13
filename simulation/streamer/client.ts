@@ -7,7 +7,7 @@ import { PublicKey } from "@solana/web3.js";
 import { Keypair } from "@solana/web3.js";
 import { Devolt, IDL } from "./types/devolt";
 
-export const DEVOLT_PROGRAM_ID = "A8Tx8hQwFY2mDuRG89dxiLBac1V3rJtkpPKvktc7uMkw";
+export const DEVOLT_PROGRAM_ID = "J2Q9o5k6FmZQjiCiuVoDST3u97qxvNPZujFgxcRL4Hho";
 
 dotenv.config({ path: __dirname + "/.env" });
 
